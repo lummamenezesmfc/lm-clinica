@@ -10,6 +10,8 @@ from src.financeiro.financeiro import TipoLancamento, Lancamento
 from src.financeiro import repositorio as repo_financeiro
 from src.prontuario.prontuario import Evolucao
 from src.prontuario import repositorio as repo_prontuario
+from src.estoque.produto import Produto
+from src.estoque import repositorio as repo_estoque
 
 UPLOAD_DIR = Path(__file__).parent / "static" / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
@@ -101,6 +103,39 @@ def novo_lancamento():
         repo_financeiro.salvar(lancamento)
         return redirect(url_for("financeiro"))
     return render_template("novo_lancamento.html")
+
+
+# --- Estoque ---
+
+@app.route("/estoque")
+def estoque():
+    produtos = repo_estoque.listar_todos()
+    alertas = [(p, pid) for p, pid in produtos if p.abaixo_do_minimo or p.vencido or p.vence_em_breve]
+    return render_template("estoque.html", produtos=produtos, alertas=alertas)
+
+
+@app.route("/estoque/novo", methods=["GET", "POST"])
+def novo_produto():
+    if request.method == "POST":
+        validade = request.form.get("validade")
+        produto = Produto(
+            nome=request.form["nome"],
+            quantidade=float(request.form["quantidade"]),
+            unidade=request.form["unidade"],
+            validade=__import__('datetime').date.fromisoformat(validade) if validade else None,
+            fornecedor=request.form.get("fornecedor", ""),
+            quantidade_minima=float(request.form.get("quantidade_minima") or 0),
+        )
+        repo_estoque.salvar(produto)
+        return redirect(url_for("estoque"))
+    return render_template("novo_produto.html")
+
+
+@app.route("/estoque/<int:produto_id>/ajustar", methods=["POST"])
+def ajustar_estoque(produto_id):
+    nova_qtd = float(request.form["quantidade"])
+    repo_estoque.atualizar_quantidade(produto_id, nova_qtd)
+    return redirect(url_for("estoque"))
 
 
 # --- Prontuário ---
