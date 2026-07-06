@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+  <div>
+    <h1 style="margin:0;">{{ paciente.nome }}</h1>
+    <div style="color:#888; font-size:0.9rem; margin-top:4px;">{{ paciente.telefone }} · {{ paciente.email }}</div>
+  </div>
+  <a href="/pacientes/{{ paciente_id }}/prontuario/nova" class="btn btn-primary">+ Nova evolução</a>
+</div>
+
+{% if evolucoes %}
+  {% for e in evolucoes %}
+  <div class="card" style="margin-bottom:16px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+      <div>
+        <div style="font-weight:700; font-size:1rem;">{{ e.procedimento }}</div>
+        <div style="color:#888; font-size:0.85rem;">{{ e.data[:16].replace('T',' ') }} · {{ e.profissional }}</div>
+      </div>
+    </div>
+    <p style="font-size:0.9rem; color:#444; line-height:1.6;">{{ e.descricao }}</p>
+
+    {% if e.foto_antes or e.foto_depois %}
+    <div style="display:flex; gap:16px; margin-top:16px;">
+      {% if e.foto_antes %}
+      <div>
+        <div style="font-size:0.8rem; color:#888; margin-bottom:6px;">Antes</div>
+        <img src="/static/{{ e.foto_antes }}" style="max-width:200px; border-radius:8px; border:1px solid #eee;">
+      </div>
+      {% endif %}
+      {% if e.foto_depois %}
+      <div>
+        <div style="font-size:0.8rem; color:#888; margin-bottom:6px;">Depois</div>
+        <img src="/static/{{ e.foto_depois }}" style="max-width:200px; border-radius:8px; border:1px solid #eee;">
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+{% else %}
+  <div class="card">
+    <p style="color:#aaa; font-size:0.9rem;">Nenhuma evolução registrada ainda.</p>
+  </div>
+{% endif %}
+
+<div style="margin-top:8px;">
+  <a href="/pacientes" style="color:#888; font-size:0.9rem;">← Voltar para pacientes</a>
+</div>
+{% endblock %}

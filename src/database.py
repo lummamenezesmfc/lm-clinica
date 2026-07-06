@@ -33,6 +33,18 @@ def inicializar():
                 FOREIGN KEY (paciente_id) REFERENCES pacientes(id)
             );
 
+            CREATE TABLE IF NOT EXISTS evolucoes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                paciente_id INTEGER NOT NULL,
+                procedimento TEXT NOT NULL,
+                descricao TEXT NOT NULL,
+                profissional TEXT NOT NULL,
+                data TEXT NOT NULL,
+                foto_antes TEXT DEFAULT '',
+                foto_depois TEXT DEFAULT '',
+                FOREIGN KEY (paciente_id) REFERENCES pacientes(id)
+            );
+
             CREATE TABLE IF NOT EXISTS lancamentos (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 descricao TEXT NOT NULL,
