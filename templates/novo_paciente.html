@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Novo Paciente</h1>
+
+<div class="card">
+  <form method="POST">
+    <label>Nome completo</label>
+    <input type="text" name="nome" required placeholder="Ex: Ana Paula Silva">
+
+    <label>Telefone</label>
+    <input type="text" name="telefone" required placeholder="Ex: 11999999999">
+
+    <label>Email</label>
+    <input type="email" name="email" placeholder="Ex: ana@email.com">
+
+    <label>Data de nascimento</label>
+    <input type="date" name="data_nascimento" required>
+
+    <label>Observações</label>
+    <textarea name="observacoes" rows="3" placeholder="Alergias, histórico relevante..."></textarea>
+
+    <button type="submit" class="btn btn-primary">Salvar paciente</button>
+    <a href="/pacientes" style="margin-left:12px; color:#888; font-size:0.9rem;">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+  <h1 style="margin:0;">Agenda</h1>
+  <a href="/agenda/novo" class="btn btn-primary">+ Novo agendamento</a>
+</div>
+
+<div class="card">
+  {% if agendamentos %}
+  <table>
+    <thead>
+      <tr><th>Paciente</th><th>Procedimento</th><th>Data/Hora</th><th>Profissional</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for a in agendamentos %}
+      <tr>
+        <td>{{ a.paciente }}</td>
+        <td>{{ a.procedimento }}</td>
+        <td>{{ a.data_hora[:16].replace('T', ' ') }}</td>
+        <td>{{ a.profissional }}</td>
+        <td>
+          {% if a.confirmado %}
+            <span class="badge badge-green">Confirmado</span>
+          {% else %}
+            <span class="badge badge-yellow">Pendente</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if not a.confirmado %}
+            <a href="/agenda/confirmar/{{ a.id }}" class="btn btn-success" style="padding:6px 14px; font-size:0.8rem;">Confirmar</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#aaa; font-size:0.9rem;">Nenhum agendamento cadastrado ainda.</p>
+  {% endif %}
+</div>
+{% endblock %}

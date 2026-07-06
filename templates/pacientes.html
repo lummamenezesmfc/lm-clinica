@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+  <h1 style="margin:0;">Pacientes</h1>
+  <a href="/pacientes/novo" class="btn btn-primary">+ Novo paciente</a>
+</div>
+
+<div class="card">
+  {% if pacientes %}
+  <table>
+    <thead>
+      <tr><th>Nome</th><th>Telefone</th><th>Email</th><th>Nascimento</th></tr>
+    </thead>
+    <tbody>
+      {% for p in pacientes %}
+      <tr>
+        <td>{{ p.nome }}</td>
+        <td>{{ p.telefone }}</td>
+        <td>{{ p.email }}</td>
+        <td>{{ p.data_nascimento.strftime('%d/%m/%Y') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#aaa; font-size:0.9rem;">Nenhum paciente cadastrado ainda.</p>
+  {% endif %}
+</div>
+{% endblock %}

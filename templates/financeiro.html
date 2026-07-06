@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+  <h1 style="margin:0;">Financeiro</h1>
+  <a href="/financeiro/novo" class="btn btn-primary">+ Novo lançamento</a>
+</div>
+
+<div class="card" style="margin-bottom:16px;">
+  <div style="font-size:0.9rem; color:#888; margin-bottom:4px;">Saldo atual</div>
+  <div style="font-size:2rem; font-weight:700; color:{% if saldo >= 0 %}#16a34a{% else %}#dc2626{% endif %};">
+    R$ {{ "%.2f" | format(saldo) }}
+  </div>
+</div>
+
+<div class="card">
+  {% if extrato %}
+  <table>
+    <thead>
+      <tr><th>Data</th><th>Descrição</th><th>Paciente</th><th>Tipo</th><th>Valor</th></tr>
+    </thead>
+    <tbody>
+      {% for l in extrato %}
+      <tr>
+        <td>{{ l.data[:10].split('-') | reverse | join('/') }}</td>
+        <td>{{ l.descricao }}</td>
+        <td>{{ l.paciente or '—' }}</td>
+        <td>
+          {% if l.tipo == 'entrada' %}
+            <span class="badge badge-green">Entrada</span>
+          {% else %}
+            <span class="badge badge-red">Saída</span>
+          {% endif %}
+        </td>
+        <td style="font-weight:600; color:{% if l.tipo == 'entrada' %}#16a34a{% else %}#dc2626{% endif %};">
+          {% if l.tipo == 'saida' %}−{% endif %}R$ {{ "%.2f" | format(l.valor) }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#aaa; font-size:0.9rem;">Nenhum lançamento registrado ainda.</p>
+  {% endif %}
+</div>
+{% endblock %}
