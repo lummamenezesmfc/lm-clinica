@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Novo Produto</h1>
+
+<div class="card">
+  <form method="POST">
+    <label>Nome do produto</label>
+    <input type="text" name="nome" required placeholder="Ex: Toxina Botulínica, Ácido Hialurônico">
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div>
+        <label>Quantidade</label>
+        <input type="number" name="quantidade" step="0.1" min="0" required placeholder="Ex: 10">
+      </div>
+      <div>
+        <label>Unidade</label>
+        <input type="text" name="unidade" required placeholder="Ex: unidade, ml, frasco">
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div>
+        <label>Validade (opcional)</label>
+        <input type="date" name="validade">
+      </div>
+      <div>
+        <label>Quantidade mínima para alerta</label>
+        <input type="number" name="quantidade_minima" step="0.1" min="0" placeholder="Ex: 2">
+      </div>
+    </div>
+
+    <label>Fornecedor (opcional)</label>
+    <input type="text" name="fornecedor" placeholder="Ex: Allergan, Galderma">
+
+    <button type="submit" class="btn btn-primary">Salvar produto</button>
+    <a href="/estoque" style="margin-left:12px; color:#888; font-size:0.9rem;">Cancelar</a>
+  </form>
+</div>
+{% endblock %}
