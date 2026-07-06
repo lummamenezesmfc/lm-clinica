@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Novo Lançamento</h1>
+
+<div class="card">
+  <form method="POST">
+    <label>Descrição</label>
+    <input type="text" name="descricao" required placeholder="Ex: Consulta Ana, Compra de material">
+
+    <label>Valor (R$)</label>
+    <input type="number" name="valor" step="0.01" min="0.01" required placeholder="Ex: 250.00">
+
+    <label>Tipo</label>
+    <select name="tipo" required>
+      <option value="entrada">Entrada</option>
+      <option value="saida">Saída</option>
+    </select>
+
+    <label>Paciente (opcional)</label>
+    <input type="text" name="paciente" placeholder="Ex: Ana Paula Silva">
+
+    <button type="submit" class="btn btn-primary">Salvar lançamento</button>
+    <a href="/financeiro" style="margin-left:12px; color:#888; font-size:0.9rem;">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

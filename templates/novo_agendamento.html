@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Novo Agendamento</h1>
+
+<div class="card">
+  <form method="POST">
+    <label>Paciente</label>
+    <select name="paciente_id" required onchange="atualizarNome(this)">
+      <option value="">Selecione um paciente</option>
+      {% for p in pacientes %}
+      <option value="{{ loop.index }}" data-nome="{{ p.nome }}">{{ p.nome }}</option>
+      {% endfor %}
+    </select>
+    <input type="hidden" name="paciente_nome" id="paciente_nome">
+
+    <label>Procedimento</label>
+    <input type="text" name="procedimento" required placeholder="Ex: Botox, Preenchimento labial">
+
+    <label>Data e horário</label>
+    <input type="datetime-local" name="data_hora" required>
+
+    <label>Profissional</label>
+    <input type="text" name="profissional" required placeholder="Ex: Dra. Lumma">
+
+    <button type="submit" class="btn btn-primary">Salvar agendamento</button>
+    <a href="/agenda" style="margin-left:12px; color:#888; font-size:0.9rem;">Cancelar</a>
+  </form>
+</div>
+
+<script>
+  function atualizarNome(select) {
+    const option = select.options[select.selectedIndex];
+    document.getElementById('paciente_nome').value = option.dataset.nome || '';
+  }
+
+  // Buscar o id real do paciente pelo índice
+  const pacientes = {{ pacientes | tojson(indent=0) }};
+  document.querySelector('select[name=paciente_id]').addEventListener('change', function() {
+    const idx = parseInt(this.value) - 1;
+    if (idx >= 0) {
+      this.value = idx + 1; // placeholder, será resolvido no backend
+    }
+  });
+</script>
+{% endblock %}

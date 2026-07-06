@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Dashboard</h1>
+
+<div class="stats">
+  <div class="stat">
+    <div class="value">{{ agendamentos | length }}</div>
+    <div class="label">Agendamentos hoje</div>
+  </div>
+  <div class="stat">
+    <div class="value">{{ total_pacientes }}</div>
+    <div class="label">Pacientes cadastrados</div>
+  </div>
+  <div class="stat">
+    <div class="value">R$ {{ "%.2f" | format(saldo) }}</div>
+    <div class="label">Saldo atual</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Agendamentos de hoje — {{ hoje.strftime('%d/%m/%Y') }}</h2>
+  {% if agendamentos %}
+  <table>
+    <thead>
+      <tr><th>Paciente</th><th>Procedimento</th><th>Horário</th><th>Profissional</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      {% for a in agendamentos %}
+      <tr>
+        <td>{{ a.paciente }}</td>
+        <td>{{ a.procedimento }}</td>
+        <td>{{ a.data_hora[11:16] }}</td>
+        <td>{{ a.profissional }}</td>
+        <td>
+          {% if a.confirmado %}
+            <span class="badge badge-green">Confirmado</span>
+          {% else %}
+            <span class="badge badge-yellow">Pendente</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#aaa; font-size:0.9rem;">Nenhum agendamento para hoje.</p>
+  {% endif %}
+</div>
+{% endblock %}
