@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Nova Evolução — {{ paciente.nome }}</h1>
+
+<div class="card">
+  <form method="POST" enctype="multipart/form-data">
+    <label>Procedimento</label>
+    <input type="text" name="procedimento" required placeholder="Ex: Botox, Preenchimento labial">
+
+    <label>Profissional</label>
+    <input type="text" name="profissional" required placeholder="Ex: Dra. Lumma">
+
+    <label>Descrição / Evolução clínica</label>
+    <textarea name="descricao" rows="5" required placeholder="Descreva o procedimento realizado, quantidade de unidades, observações..."></textarea>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div>
+        <label>Foto antes (opcional)</label>
+        <input type="file" name="foto_antes" accept="image/*">
+      </div>
+      <div>
+        <label>Foto depois (opcional)</label>
+        <input type="file" name="foto_depois" accept="image/*">
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar evolução</button>
+    <a href="javascript:history.back()" style="margin-left:12px; color:#888; font-size:0.9rem;">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

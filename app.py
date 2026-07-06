@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime, date
+from pathlib import Path
 from src.database import inicializar
 from src.pacientes.paciente import Paciente
 from src.pacientes import repositorio as repo_pacientes
@@ -7,6 +8,11 @@ from src.agenda.agenda import Agendamento
 from src.agenda import repositorio as repo_agenda
 from src.financeiro.financeiro import TipoLancamento, Lancamento
 from src.financeiro import repositorio as repo_financeiro
+from src.prontuario.prontuario import Evolucao
+from src.prontuario import repositorio as repo_prontuario
+
+UPLOAD_DIR = Path(__file__).parent / "static" / "uploads"
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 app = Flask(__name__)
 inicializar()
@@ -25,7 +31,7 @@ def index():
 
 @app.route("/pacientes")
 def pacientes():
-    lista = repo_pacientes.listar_todos()
+    lista = repo_pacientes.listar_com_ids()
     return render_template("pacientes.html", pacientes=lista)
 
 
@@ -95,6 +101,44 @@ def novo_lancamento():
         repo_financeiro.salvar(lancamento)
         return redirect(url_for("financeiro"))
     return render_template("novo_lancamento.html")
+
+
+# --- Prontuário ---
+
+@app.route("/pacientes/<int:paciente_id>/prontuario")
+def prontuario(paciente_id):
+    paciente = repo_pacientes.buscar_por_id(paciente_id)
+    evolucoes = repo_prontuario.listar_por_paciente(paciente_id)
+    return render_template("prontuario.html", paciente=paciente, evolucoes=evolucoes, paciente_id=paciente_id)
+
+
+@app.route("/pacientes/<int:paciente_id>/prontuario/nova", methods=["GET", "POST"])
+def nova_evolucao(paciente_id):
+    paciente = repo_pacientes.buscar_por_id(paciente_id)
+    if request.method == "POST":
+        foto_antes = ""
+        foto_depois = ""
+
+        for campo, nome_var in [("foto_antes", "foto_antes"), ("foto_depois", "foto_depois")]:
+            arquivo = request.files.get(campo)
+            if arquivo and arquivo.filename:
+                caminho = UPLOAD_DIR / f"{paciente_id}_{campo}_{datetime.now().strftime('%Y%m%d%H%M%S')}_{arquivo.filename}"
+                arquivo.save(caminho)
+                if campo == "foto_antes":
+                    foto_antes = f"uploads/{caminho.name}"
+                else:
+                    foto_depois = f"uploads/{caminho.name}"
+
+        evolucao = Evolucao(
+            procedimento=request.form["procedimento"],
+            descricao=request.form["descricao"],
+            profissional=request.form["profissional"],
+            foto_antes=foto_antes,
+            foto_depois=foto_depois,
+        )
+        repo_prontuario.salvar_evolucao(paciente_id, evolucao)
+        return redirect(url_for("prontuario", paciente_id=paciente_id))
+    return render_template("nova_evolucao.html", paciente=paciente)
 
 
 if __name__ == "__main__":

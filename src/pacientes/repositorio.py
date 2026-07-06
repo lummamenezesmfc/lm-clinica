@@ -32,6 +32,12 @@ def listar_todos() -> list[Paciente]:
     return [_row_para_paciente(r) for r in rows]
 
 
+def listar_com_ids() -> list[tuple[Paciente, int]]:
+    with conectar() as conn:
+        rows = conn.execute("SELECT * FROM pacientes ORDER BY nome").fetchall()
+    return [(_row_para_paciente(r), r["id"]) for r in rows]
+
+
 def _row_para_paciente(row) -> Paciente:
     return Paciente(
         nome=row["nome"],
