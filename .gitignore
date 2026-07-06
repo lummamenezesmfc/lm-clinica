@@ -1,0 +1,12 @@
+# Arquivos pessoais e documentos
+*.pdf
+*.xlsx
+*.xls
+*.jpeg
+*.jpg
+*.png
+*.gif
+
+# Sistema
+.DS_Store
+Thumbs.db
