@@ -6,10 +6,20 @@ from src.pacientes.paciente import Paciente
 def salvar(paciente: Paciente) -> int:
     with conectar() as conn:
         cursor = conn.execute(
-            "INSERT INTO pacientes (nome, telefone, email, data_nascimento, observacoes) VALUES (?, ?, ?, ?, ?)",
-            (paciente.nome, paciente.telefone, paciente.email, paciente.data_nascimento.isoformat(), paciente.observacoes),
+            "INSERT INTO pacientes (nome, telefone, email, data_nascimento, cpf, endereco, observacoes) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (paciente.nome, paciente.telefone, paciente.email, paciente.data_nascimento.isoformat(),
+             paciente.cpf, paciente.endereco, paciente.observacoes),
         )
         return cursor.lastrowid
+
+
+def atualizar(paciente_id: int, paciente: Paciente):
+    with conectar() as conn:
+        conn.execute(
+            "UPDATE pacientes SET nome=?, telefone=?, email=?, data_nascimento=?, cpf=?, endereco=?, observacoes=? WHERE id=?",
+            (paciente.nome, paciente.telefone, paciente.email, paciente.data_nascimento.isoformat(),
+             paciente.cpf, paciente.endereco, paciente.observacoes, paciente_id),
+        )
 
 
 def buscar_por_id(paciente_id: int) -> Paciente | None:
@@ -42,7 +52,9 @@ def _row_para_paciente(row) -> Paciente:
     return Paciente(
         nome=row["nome"],
         telefone=row["telefone"],
-        email=row["email"],
+        email=row["email"] or "",
         data_nascimento=date.fromisoformat(row["data_nascimento"]),
+        cpf=row["cpf"] if "cpf" in row.keys() else "",
+        endereco=row["endereco"] if "endereco" in row.keys() else "",
         observacoes=row["observacoes"] or "",
     )

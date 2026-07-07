@@ -20,6 +20,8 @@ def inicializar():
                 telefone TEXT NOT NULL,
                 email TEXT,
                 data_nascimento TEXT NOT NULL,
+                cpf TEXT DEFAULT '',
+                endereco TEXT DEFAULT '',
                 observacoes TEXT DEFAULT ''
             );
 
@@ -31,6 +33,15 @@ def inicializar():
                 profissional TEXT NOT NULL,
                 confirmado INTEGER DEFAULT 0,
                 FOREIGN KEY (paciente_id) REFERENCES pacientes(id)
+            );
+
+            CREATE TABLE IF NOT EXISTS lancamentos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                descricao TEXT NOT NULL,
+                valor REAL NOT NULL,
+                tipo TEXT NOT NULL,
+                data TEXT NOT NULL,
+                paciente TEXT DEFAULT ''
             );
 
             CREATE TABLE IF NOT EXISTS produtos (
@@ -54,13 +65,13 @@ def inicializar():
                 foto_depois TEXT DEFAULT '',
                 FOREIGN KEY (paciente_id) REFERENCES pacientes(id)
             );
-
-            CREATE TABLE IF NOT EXISTS lancamentos (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                descricao TEXT NOT NULL,
-                valor REAL NOT NULL,
-                tipo TEXT NOT NULL,
-                data TEXT NOT NULL,
-                paciente TEXT DEFAULT ''
-            );
         """)
+        # Migracoes para colunas novas em bancos ja existentes
+        _adicionar_coluna_se_nao_existe(conn, "pacientes", "cpf", "TEXT DEFAULT ''")
+        _adicionar_coluna_se_nao_existe(conn, "pacientes", "endereco", "TEXT DEFAULT ''")
+
+
+def _adicionar_coluna_se_nao_existe(conn, tabela: str, coluna: str, definicao: str):
+    colunas = [row[1] for row in conn.execute(f"PRAGMA table_info({tabela})").fetchall()]
+    if coluna not in colunas:
+        conn.execute(f"ALTER TABLE {tabela} ADD COLUMN {coluna} {definicao}")
