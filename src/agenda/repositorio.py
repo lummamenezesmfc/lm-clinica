@@ -12,9 +12,28 @@ def salvar(agendamento: Agendamento, paciente_id: int) -> int:
         return cursor.lastrowid
 
 
+def atualizar(agendamento_id: int, procedimento: str, data_hora: datetime, profissional: str):
+    with conectar() as conn:
+        conn.execute(
+            "UPDATE agendamentos SET procedimento=?, data_hora=?, profissional=? WHERE id=?",
+            (procedimento, data_hora.isoformat(), profissional, agendamento_id),
+        )
+
+
 def confirmar(agendamento_id: int):
     with conectar() as conn:
         conn.execute("UPDATE agendamentos SET confirmado = 1 WHERE id = ?", (agendamento_id,))
+
+
+def buscar_por_id(agendamento_id: int) -> dict | None:
+    with conectar() as conn:
+        row = conn.execute("""
+            SELECT a.id, p.nome as paciente, a.paciente_id, a.procedimento, a.data_hora, a.profissional, a.confirmado
+            FROM agendamentos a
+            JOIN pacientes p ON p.id = a.paciente_id
+            WHERE a.id = ?
+        """, (agendamento_id,)).fetchone()
+    return dict(row) if row else None
 
 
 def listar_do_dia(data: datetime) -> list[dict]:

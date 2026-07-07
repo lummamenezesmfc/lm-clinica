@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from src.database import conectar
 from src.prontuario.prontuario import Evolucao
 
@@ -14,6 +14,25 @@ def salvar_evolucao(paciente_id: int, evolucao: Evolucao) -> int:
              evolucao.foto_antes, evolucao.foto_depois),
         )
         return cursor.lastrowid
+
+
+def buscar_por_id(evolucao_id: int) -> dict | None:
+    with conectar() as conn:
+        row = conn.execute("SELECT * FROM evolucoes WHERE id = ?", (evolucao_id,)).fetchone()
+    return dict(row) if row else None
+
+
+def pode_editar(evolucao: dict) -> bool:
+    criado_em = datetime.fromisoformat(evolucao["data"])
+    return datetime.now() - criado_em <= timedelta(hours=24)
+
+
+def atualizar_evolucao(evolucao_id: int, procedimento: str, descricao: str, profissional: str):
+    with conectar() as conn:
+        conn.execute(
+            "UPDATE evolucoes SET procedimento=?, descricao=?, profissional=? WHERE id=?",
+            (procedimento, descricao, profissional, evolucao_id),
+        )
 
 
 def listar_por_paciente(paciente_id: int) -> list[dict]:

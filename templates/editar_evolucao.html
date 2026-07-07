@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Editar Evolução</h1>
+
+<div class="card">
+  <p style="color:#888; font-size:0.85rem; margin-bottom:20px;">Você pode editar esta evolução por até 24 horas após o registro.</p>
+  <form method="POST">
+    <label>Procedimento</label>
+    <input type="text" name="procedimento" required value="{{ evolucao.procedimento }}">
+
+    <label>Profissional</label>
+    <input type="text" name="profissional" required value="{{ evolucao.profissional }}">
+
+    <label>Descrição / Evolução clínica</label>
+    <textarea name="descricao" rows="6" required>{{ evolucao.descricao }}</textarea>
+
+    <button type="submit" class="btn btn-primary">Salvar alterações</button>
+    <a href="javascript:history.back()" style="margin-left:12px; color:#888; font-size:0.9rem;">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

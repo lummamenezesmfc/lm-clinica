@@ -8,6 +8,8 @@ class Paciente:
     telefone: str
     email: str
     data_nascimento: date
+    cpf: str = ""
+    endereco: str = ""
     observacoes: str = ""
     historico: list[str] = field(default_factory=list)
 

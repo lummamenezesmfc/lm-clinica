@@ -25,10 +25,11 @@
             <span class="badge badge-yellow">Pendente</span>
           {% endif %}
         </td>
-        <td>
+        <td style="display:flex; gap:6px;">
           {% if not a.confirmado %}
-            <a href="/agenda/confirmar/{{ a.id }}" class="btn btn-success" style="padding:6px 14px; font-size:0.8rem;">Confirmar</a>
+            <a href="/agenda/confirmar/{{ a.id }}" class="btn btn-success" style="padding:6px 12px; font-size:0.8rem;">Confirmar</a>
           {% endif %}
+          <a href="/agenda/{{ a.id }}/editar" class="btn" style="padding:6px 12px; font-size:0.8rem; background:#f3f4f6; color:#333;">Remarcar</a>
         </td>
       </tr>
       {% endfor %}

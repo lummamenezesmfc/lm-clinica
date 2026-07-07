@@ -16,6 +16,9 @@
         <div style="font-weight:700; font-size:1rem;">{{ e.procedimento }}</div>
         <div style="color:#888; font-size:0.85rem;">{{ e.data[:16].replace('T',' ') }} · {{ e.profissional }}</div>
       </div>
+      {% if e.pode_editar %}
+      <a href="/prontuario/{{ e.id }}/editar" class="btn" style="padding:6px 14px; font-size:0.8rem; background:#f3f4f6; color:#333;">Editar</a>
+      {% endif %}
     </div>
     <p style="font-size:0.9rem; color:#444; line-height:1.6;">{{ e.descricao }}</p>
 

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Remarcar Agendamento</h1>
+
+<div class="card">
+  <p style="color:#888; font-size:0.9rem; margin-bottom:20px;">Paciente: <strong>{{ agendamento.paciente }}</strong></p>
+  <form method="POST">
+    <label>Procedimento</label>
+    <input type="text" name="procedimento" required value="{{ agendamento.procedimento }}">
+
+    <label>Nova data e horário</label>
+    <input type="datetime-local" name="data_hora" required value="{{ agendamento.data_hora[:16] }}">
+
+    <label>Profissional</label>
+    <input type="text" name="profissional" required value="{{ agendamento.profissional }}">
+
+    <button type="submit" class="btn btn-primary">Salvar alterações</button>
+    <a href="/agenda" style="margin-left:12px; color:#888; font-size:0.9rem;">Cancelar</a>
+  </form>
+</div>
+{% endblock %}
